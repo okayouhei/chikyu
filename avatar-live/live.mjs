@@ -33,7 +33,7 @@ function envelope(wav) {
   return env;
 }
 
-const browser = await chromium.launch({ args: ['--no-sandbox', '--start-fullscreen', '--kiosk'] });
+const browser = await chromium.launch({ headless: false, args: ['--no-sandbox', '--start-fullscreen', '--kiosk'] });
 const page = await browser.newPage({ viewport: { width: 720, height: 1280 } }); // 縦型
 await page.goto('file://' + path.join(dir, 'avatar.html'));
 

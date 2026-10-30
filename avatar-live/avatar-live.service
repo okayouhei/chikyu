@@ -1,0 +1,17 @@
+[Unit]
+Description=Chikyu avatar live stream
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+User=live
+Environment=XDG_RUNTIME_DIR=/run/user/%U
+EnvironmentFile=/etc/avatar-live.env
+WorkingDirectory=/opt/avatar-live
+ExecStart=/opt/avatar-live/stream.sh
+Restart=always
+RestartSec=15
+KillMode=control-group
+
+[Install]
+WantedBy=multi-user.target

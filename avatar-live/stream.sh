@@ -8,11 +8,13 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 export DISPLAY=:99
-Xvfb :99 -screen 0 720x1280x24 &
+rm -f /tmp/.X99-lock
+Xvfb :99 -screen 0 720x1280x24 -nolisten tcp &
 pulseaudio --start --exit-idle-time=-1
-pactl load-module module-null-sink sink_name=live_sink >/dev/null
+pactl list short sinks | grep -q live_sink || pactl load-module module-null-sink sink_name=live_sink >/dev/null
 
 node live.mjs &
+sleep 5   # ブラウザ描画を待つ
 
 ffmpeg -loglevel warning \
   -f x11grab -framerate 30 -video_size 720x1280 -i :99 \

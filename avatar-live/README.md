@@ -21,3 +21,15 @@ export TIKTOK_STREAM_KEY=...        # 「ストリームキー」
 - TikTok でストリームキー（RTMP）を発行するには、アカウントの LIVE 配信資格（年齢・フォロワー数など）が必要です。キーは配信ごとに変わるため、毎回 TikTok LIVE Studio で取得してください。**キーは絶対にコミットしないでください。**
 - 24時間運用するなら、パソコンではなくクラウドの常時起動Linux（VPS）での実行がおすすめです。パソコンを使う場合は BIOS で Wake-on-LAN を有効にし、起動時に `stream.sh` が走るよう設定します。
 - TikTok のガイドライン上、自動配信でも内容の責任は配信者にあります。台本の内容を確認してください。
+
+## VPS で動かす（推奨）
+Ubuntu 22.04/24.04、2vCPU・4GB RAM 以上（映像エンコードがあるため）を想定。
+```
+git clone <このリポジトリ> && cd chikyu/avatar-live
+sudo bash setup-vps.sh
+sudo nano /etc/avatar-live.env          # TIKTOK_RTMP_URL / TIKTOK_STREAM_KEY を入力
+sudo systemctl enable --now avatar-live # 起動＆再起動時も自動起動
+journalctl -u avatar-live -f            # ログ
+sudo systemctl stop avatar-live         # 配信停止
+```
+`/etc/avatar-live.env` は root のみ読めます。リポジトリには置かないでください。
