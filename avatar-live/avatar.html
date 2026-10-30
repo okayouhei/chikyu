@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>ちきゅうちゃん</title>
+<style>
+  html,body{margin:0;height:100%;background:#fff7e6;overflow:hidden;font-family:"Zen Maru Gothic","Noto Sans JP",sans-serif}
+  #stage{width:100vw;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  svg{height:68vh;max-width:100vw}
+  #caption{position:absolute;left:5%;right:5%;bottom:7%;padding:.6em .8em;border-radius:1em;background:rgba(255,255,255,.92);
+    font-size:4.2vh;font-weight:700;color:#234;text-align:center;min-height:2.6em;display:flex;align-items:center;justify-content:center;box-shadow:0 .3em 1em rgba(0,0,0,.12)}
+  #title{position:absolute;top:3%;width:100%;text-align:center;font-size:3.4vh;font-weight:900;color:#2a7;letter-spacing:.08em}
+  #body{transform-origin:50% 90%;animation:float 3.2s ease-in-out infinite}
+  @keyframes float{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-10px) rotate(1deg)}}
+  #eyes{transform-origin:50% 50%}
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="title">地球活性化ライブ</div>
+  <svg viewBox="0 0 400 420" xmlns="http://www.w3.org/2000/svg" aria-label="ちきゅうちゃん">
+    <g id="body">
+      <circle cx="200" cy="210" r="150" fill="#3b9de0"/>
+      <path d="M110 140c30-30 70-20 80 10s-30 40-20 70-50 30-70-10-10-50 10-70z" fill="#5cc66a"/>
+      <path d="M240 120c25-10 60 5 65 35s-25 30-35 55-45 10-45-25 0-55 15-65z" fill="#5cc66a"/>
+      <path d="M170 300c30-15 80-10 90 20s-30 40-60 30-50-35-30-50z" fill="#5cc66a"/>
+      <ellipse cx="150" cy="130" rx="40" ry="22" fill="#fff" opacity=".25" transform="rotate(-30 150 130)"/>
+      <circle cx="130" cy="235" r="20" fill="#ff9aa8" opacity=".55"/>
+      <circle cx="270" cy="235" r="20" fill="#ff9aa8" opacity=".55"/>
+      <g id="eyes">
+        <ellipse id="eyeL" cx="155" cy="210" rx="14" ry="20" fill="#223"/>
+        <ellipse id="eyeR" cx="245" cy="210" rx="14" ry="20" fill="#223"/>
+        <circle cx="160" cy="203" r="5" fill="#fff"/><circle cx="250" cy="203" r="5" fill="#fff"/>
+      </g>
+      <ellipse id="mouth" cx="200" cy="262" rx="16" ry="3" fill="#7a2235"/>
+    </g>
+  </svg>
+  <div id="caption"></div>
+</div>
+<script>
+  const $ = id => document.getElementById(id);
+  // 外部（live.mjs）から呼ぶ API
+  window.setMouth = v => {               // v: 0〜1
+    v = Math.max(0, Math.min(1, v));
+    $('mouth').setAttribute('ry', 3 + v * 22);
+    $('mouth').setAttribute('rx', 16 - v * 4);
+  };
+  window.setCaption = t => { $('caption').textContent = t || ''; };
+  // まばたき
+  (function blink(){
+    const eyes = [$('eyeL'), $('eyeR')];
+    eyes.forEach(e => e.setAttribute('ry', 2));
+    setTimeout(() => { eyes.forEach(e => e.setAttribute('ry', 20)); setTimeout(blink, 2000 + Math.random() * 3000); }, 120);
+  })();
+  // ?demo を付けると単独で口パクのデモ
+  if (location.search.includes('demo')) {
+    setCaption('こんにちは！ちきゅうちゃんだよ！');
+    let t = 0; setInterval(() => setMouth((Math.sin(t += .5) + 1) / 2 * Math.random()), 80);
+  }
+</script>
+</body>
+</html>
